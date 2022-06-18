@@ -1,4 +1,3 @@
-from imutils.video import VideoStream
 import numpy as np
 import time
 import cv2 as cv
@@ -40,25 +39,24 @@ def pixelate_image(image, grid_size):
 
 	return image
 
-
-def main():
-    
-    file_path = os.path.dirname(os.path.abspath(__file__)) + os.sep
+def blur_face(video):
     threshold = 0.5  # objects' confidence threshold
 
     model = load_face_models()
     
-    cap = cv.VideoCapture("tiktok2.mp4")
+    cap = cv.VideoCapture(video)
 
     size = (int(cap.get(cv.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv.CAP_PROP_FRAME_HEIGHT)))
     out_fps = 30
     fourcc = cv.VideoWriter_fourcc(*'MJPG')
-    out_path = file_path + 'result.avi'
+    out_path = 'result.avi'
     writer = cv.VideoWriter(out_path, fourcc, out_fps, size)
 
     while True:
         ret, image = cap.read()
         
+        if image is None:
+            break
         (h, w) = image.shape[:2]
 
         # Phat hien khuon mat
@@ -71,7 +69,7 @@ def main():
 
             # Lay confidence
             confidence = detections[0, 0, i, 2]
-            print(detections[0, 0, i])
+            # print(detections[0, 0, i])
             # Neu confiden > 0.5 moi xu ly
             if (detections[0, 0, i, 1] == 1) and (confidence > threshold):
                 # Lay toa do that
@@ -85,7 +83,7 @@ def main():
                 # Ve de phan pixelate len
                 image[startY:endY, startX:endX] = face
 
-        cv.imshow("Output", image)
+        # cv.imshow("Output", image) 
         writer.write(image)
 
         if cv.waitKey(1) & 0xFF == ord('q'):
@@ -93,6 +91,8 @@ def main():
         
     writer.release()
     cap.release()
-    cv.destroyAllWindows()
 
-main()
+    return out_path
+    # cv.destroyAllWindows()
+
+# blur_face("tiktok2.mp4")
