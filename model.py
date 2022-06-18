@@ -49,7 +49,7 @@ def blur_face(video):
     size = (int(cap.get(cv.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv.CAP_PROP_FRAME_HEIGHT)))
     out_fps = 30
     fourcc = cv.VideoWriter_fourcc(*'H264')
-    out_path = 'result.mp4'
+    out_path = __file__ + 'result.mp4'
     writer = cv.VideoWriter(out_path, fourcc, out_fps, size)
 
     while True:
