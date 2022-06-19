@@ -40,58 +40,39 @@ def pixelate_image(image, grid_size):
 
 	return image
 
-def blur_face(video):
+def blur_face(image):
     threshold = 0.5  # objects' confidence threshold
 
     model = load_face_models()
-    
-    cap = cv.VideoCapture(video)
 
-    size = (int(cap.get(cv.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv.CAP_PROP_FRAME_HEIGHT)))
-    out_fps = 30
-    fourcc = cv.VideoWriter_fourcc(*'H264')
-    out_path = 'result.mp4'
-    writer = cv.VideoWriter(out_path, fourcc, out_fps, size)
-
-    while True:
-        ret, image = cap.read()
+    if image is None:
+        print('Image not loaded.')
+        return None
         
-        if image is None:
-            break
-        (h, w) = image.shape[:2]
+    (h, w) = image.shape[:2]
 
-        # Phat hien khuon mat
-        blob = cv.dnn.blobFromImage(image, 1.0, (300, 300), (104.0, 177.0, 123.0))
-        model.setInput(blob)
-        detections = model.forward()
+    # Phat hien khuon mat
+    blob = cv.dnn.blobFromImage(image, 1.0, (300, 300), (104.0, 177.0, 123.0))
+    model.setInput(blob)
+    detections = model.forward()
 
-        # Lap qua ket qua dau ra
-        for i in range(0, detections.shape[2]):
+    # Lap qua ket qua dau ra
+    for i in range(0, detections.shape[2]):
 
-            # Lay confidence
-            confidence = detections[0, 0, i, 2]
-            # print(detections[0, 0, i])
-            # Neu confiden > 0.5 moi xu ly
-            if (detections[0, 0, i, 1] == 1) and (confidence > threshold):
-                # Lay toa do that
-                box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
-                (startX, startY, endX, endY) = box.astype("int")
-                # Lay phan khuon mat
-                face = image[startY:endY, startX:endX]
+        # Lay confidence
+        confidence = detections[0, 0, i, 2]
+        # print(detections[0, 0, i])
+        # Neu confiden > 0.5 moi xu ly
+        if (detections[0, 0, i, 1] == 1) and (confidence > threshold):
+            # Lay toa do that
+            box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+            (startX, startY, endX, endY) = box.astype("int")
+            # Lay phan khuon mat
+            face = image[startY:endY, startX:endX]
 
-                # Pixelate
-                face = pixelate_image(face, grid_size=int(w * 0.01))
-                # Ve de phan pixelate len
-                image[startY:endY, startX:endX] = face
+            # Pixelate
+            face = pixelate_image(face, grid_size=int(w * 0.01))
+            # Ve de phan pixelate len
+            image[startY:endY, startX:endX] = face
 
-        # cv.imshow("Output", image) 
-        writer.write(image)
-        video.append(image)
-        
-        if cv.waitKey(1) & 0xFF == ord('q'):
-            break
-        
-    writer.release()
-    cap.release()
-
-    return out_path
+    return image
