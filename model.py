@@ -95,7 +95,7 @@ def blur_face(video):
     writer.release()
     cap.release()
 
-    return video
+    return np.asarray(video)
     # cv.destroyAllWindows()
 
 # blur_face("tiktok2.mp4")
