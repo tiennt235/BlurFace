@@ -5,4 +5,4 @@ video = st.file_uploader("Choose a file to upload")
 
 if video is not None:
     result = model.blur_face(video.name)
-    st.image(result)
+    st.video(result)
