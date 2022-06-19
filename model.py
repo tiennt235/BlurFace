@@ -53,7 +53,6 @@ def blur_face(video):
     out_path = 'result.mp4'
     writer = cv.VideoWriter(out_path, fourcc, out_fps, size)
 
-    video = []
     while True:
         ret, image = cap.read()
         
@@ -95,7 +94,4 @@ def blur_face(video):
     writer.release()
     cap.release()
 
-    return np.asarray(video)
-    # cv.destroyAllWindows()
-
-# blur_face("tiktok2.mp4")
+    return out_path
