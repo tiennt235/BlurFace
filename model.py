@@ -40,12 +40,10 @@ def pixelate_image(image, grid_size):
 
 	return image
 
-def blur_face(img_name):
+def blur_face(image):
     threshold = 0.5  # objects' confidence threshold
 
     model = load_face_models()
-
-    image = cv.imread(img_name)
 
     if image is None:
         print('Image not loaded.')
