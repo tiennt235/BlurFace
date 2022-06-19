@@ -40,24 +40,17 @@ def pixelate_image(image, grid_size):
 
 	return image
 
-def blur_face(video):
+def blur_face(img_name):
     threshold = 0.5  # objects' confidence threshold
 
     model = load_face_models()
-    
-    cap = cv.VideoCapture(video)
 
-    size = (int(cap.get(cv.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv.CAP_PROP_FRAME_HEIGHT)))
-    out_fps = 30
-    fourcc = cv.VideoWriter_fourcc(*'H264')
-    out_path = 'result.mp4'
-    writer = cv.VideoWriter(out_path, fourcc, out_fps, size)
+    image = cv.imread(img_name)
 
     while True:
-        ret, image = cap.read()
-        
         if image is None:
-            break
+            print('Image not loaded.')
+            
         (h, w) = image.shape[:2]
 
         # Phat hien khuon mat
@@ -84,14 +77,4 @@ def blur_face(video):
                 # Ve de phan pixelate len
                 image[startY:endY, startX:endX] = face
 
-        # cv.imshow("Output", image) 
-        writer.write(image)
-        video.append(image)
-        
-        if cv.waitKey(1) & 0xFF == ord('q'):
-            break
-        
-    writer.release()
-    cap.release()
-
-    return out_path
+    return image
