@@ -47,34 +47,34 @@ def blur_face(img_name):
 
     image = cv.imread(img_name)
 
-    while True:
-        if image is None:
-            print('Image not loaded.')
-            
-        (h, w) = image.shape[:2]
+    if image is None:
+        print('Image not loaded.')
+        return None
+        
+    (h, w) = image.shape[:2]
 
-        # Phat hien khuon mat
-        blob = cv.dnn.blobFromImage(image, 1.0, (300, 300), (104.0, 177.0, 123.0))
-        model.setInput(blob)
-        detections = model.forward()
+    # Phat hien khuon mat
+    blob = cv.dnn.blobFromImage(image, 1.0, (300, 300), (104.0, 177.0, 123.0))
+    model.setInput(blob)
+    detections = model.forward()
 
-        # Lap qua ket qua dau ra
-        for i in range(0, detections.shape[2]):
+    # Lap qua ket qua dau ra
+    for i in range(0, detections.shape[2]):
 
-            # Lay confidence
-            confidence = detections[0, 0, i, 2]
-            # print(detections[0, 0, i])
-            # Neu confiden > 0.5 moi xu ly
-            if (detections[0, 0, i, 1] == 1) and (confidence > threshold):
-                # Lay toa do that
-                box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
-                (startX, startY, endX, endY) = box.astype("int")
-                # Lay phan khuon mat
-                face = image[startY:endY, startX:endX]
+        # Lay confidence
+        confidence = detections[0, 0, i, 2]
+        # print(detections[0, 0, i])
+        # Neu confiden > 0.5 moi xu ly
+        if (detections[0, 0, i, 1] == 1) and (confidence > threshold):
+            # Lay toa do that
+            box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+            (startX, startY, endX, endY) = box.astype("int")
+            # Lay phan khuon mat
+            face = image[startY:endY, startX:endX]
 
-                # Pixelate
-                face = pixelate_image(face, grid_size=int(w * 0.01))
-                # Ve de phan pixelate len
-                image[startY:endY, startX:endX] = face
+            # Pixelate
+            face = pixelate_image(face, grid_size=int(w * 0.01))
+            # Ve de phan pixelate len
+            image[startY:endY, startX:endX] = face
 
     return image
