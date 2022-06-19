@@ -1,8 +1,8 @@
 import streamlit as st
 import model
 
-video = st.file_uploader("Choose a file to upload")
+image = st.file_uploader("Choose a file to upload")
 
-if video is not None:
-    result = model.blur_face(video.name)
-    st.video(result)
+if image is not None:
+    result = model.blur_face(image.name)
+    st.image(result)
