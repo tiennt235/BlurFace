@@ -9,7 +9,7 @@ from streamlit_option_menu import option_menu
 st.title('Blur Face Web App')
 with st.sidebar:
     selected = option_menu("Main Menu", ["Home", 'About us'], 
-        icons=['house','info'], menu_icon="cast", default_index=1)
+        icons=['house','info'], menu_icon="cast", default_index=0)
     selected
 
 if selected=='Home':
