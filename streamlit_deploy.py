@@ -22,13 +22,6 @@ if selected=='Home':
       image = np.asarray(image)
       result = model.blur_face(image)
       st.image(result)
-      with open(result, "rb") as file:
-          btn = st.download_button(
-              label="Download image",
-              data=file,
-              file_name=result,
-              mime="image/jpg"
-            )
 
 if selected=='About us':
 
